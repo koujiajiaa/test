@@ -1,0 +1,74 @@
+前端与后端分离项目
+一：前端部分：myblog-pc
+1.安装vue-axios和axios：npm install -save axios vue-axios
+2.在main.js中配置vue-axios
+
+二：后端部分：myblog-rd
+1.只是做后端的展示 不需要在浏览器打开
+2.安装koa-cors解决跨域问题:npm install koa-cors，在app.js中配置
+const cors=require('koa-cors')
+app.use(cors());
+3. json的格式:this.$http.post('http://localhost:3000',{
+   name:'lisi',
+   age:23
+4.安装jsonwebtoken中间件：npm install jsonwebtoken
+
+三：需求：
+1.有些页面是在登陆成功之后才可以显示，
+2.登陆成功之后，进入主页详情，获取文章数据
+3.登陆成功之后，到401的时候，出现条件判断：
+   （1）进入401之后，进入index判断错误类型
+   （2）如果成功继续执行后面的代码
+   （3）如果失败，根据错误类型，一种对应401，一种对应auth-fail
+4.生成token封装：
+5.把axios变成全局：
+   步骤：1.创建utils文件夹  http.js文件添加拦截器代码 运行之前，都会先到达拦截器里面 
+         2.基于axios
+         3.把vue-axios引入注释掉
+         4.全局引入，
+         5.修改代码，去掉axios，地址公共的提出来 每个里面的地址缩写
+6.拦截器：请求拦截器，响应拦截器，再发送请求之前先要发送到拦截器
+
+
+
+重要知识点：
+一：cors：处理跨域问题：客户端向浏览器发送ajxa请求,突破ajax同源的限制，
+1.点击按钮，出现错误：Access to XMLHttpRequest at 
+'http://localhost:3000/' from origin 'http://localhost:8080'
+ has been blocked by CORS policy: No 'Access-Control-Allow-Origin' 
+header is present on the requested resource.
+2.简单请求和非简单请求：
+3.当发送的请求，是application.json时，是非简单请求会发送两次：其中有一次是预检请求：Request Method: OPTIONS，
+测试服务器允补允许我门继续下一步
+4.消灭预检请求：后端数据bodyparser不支持
+getData（）{
+    this.axios({
+        methods:'post',
+        url:'http://localhost:3000',
+        data:{
+            name:'lisi',
+            age:23
+        },
+        headers:{
+            "content-type"："application/x-www-from-urlencoded"
+        }
+    })
+}
+5.预检请求：限定时间缓存
+6.token：健全问题 登录信息审核成功之后才可以进入到主页，
+token步骤：1.生成token
+           2.浏览器存储token
+           3.地址指向请求头要加入token
+           4.验证token
+           5.验证成功与否，成功之后进入到主页面，失败返回401报错
+7.status：是人家规定的 就是这么写
+8.ctx：被翻译成上下文，只是koa里面用到的名词，封装了request,response
+9.cookie：最早出现在服务器端给客户端扔了一个信息， 
+二：next问题（cts,next）
+next：继续执行下一个中间件
+
+
+
+作业：1.myblog-pc和myblog-rd完成所有的功能
+     2.去阿里云买学生的服务器，什么使用阿里云服务器 自己做一个项目 
+     自己的博客 发表文章 买账号 买域名 使用node 不管是否前后端分离 
